@@ -1,0 +1,7 @@
+test_case,method,retained_variables,original_context_count,retained_context_count,context_fraction_removed,context_fraction_retained,policy_agreement,expected_reward,full_context_reward
+A,full_context_reference,C,1,1,0.0,1.0,1.0,0.7,0.7
+A,predictive_only,,1,0,1.0,0.0,1.0,0.7,0.7
+A,prototype_context_reduction,,1,0,1.0,0.0,1.0,0.7,0.7
+B,full_context_reference,C,1,1,0.0,1.0,1.0,0.8,0.8
+B,predictive_only,C,1,1,0.0,1.0,1.0,0.8,0.8
+B,prototype_context_reduction,,1,0,1.0,0.0,0.5,0.5,0.8

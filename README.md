@@ -96,7 +96,8 @@ ADA/
 │   └── test_synthetic_context_tests.py
 ├── results/
 │   ├── random_graphs_baseline.png
-│   └── real_world_graphs_baseline.png
+│   ├── real_world_graphs_baseline.png
+│   └── synthetic_context_comparison.csv
 └── log/
     └── research_log.md
 ```

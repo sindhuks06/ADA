@@ -1,6 +1,6 @@
 """Reusable exact-policy and context-reduction evaluation utilities."""
 
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 import math
 
 import numpy as np
@@ -67,6 +67,58 @@ def compare_policies(
         "reduced_context_reward": reduced_reward,
         "reward_loss": full_reward - reduced_reward,
     }
+
+
+def evaluate_policy_method(
+    method_name: str,
+    retained_variables: Sequence[str],
+    full_policy: Sequence[int],
+    expected_rewards: np.ndarray,
+    context_distribution: Sequence[float],
+    original_variables: Sequence[str],
+) -> dict[str, object]:
+    """Return consistently named policy and context metrics for one method."""
+    original = list(original_variables)
+    retained = list(retained_variables)
+    if len(set(original)) != len(original) or len(set(retained)) != len(retained):
+        raise ValueError("context variable lists must not contain duplicates")
+    if not set(retained).issubset(original):
+        raise ValueError("retained_variables must be contained in original_variables")
+    if not method_name:
+        raise ValueError("method_name must not be empty")
+
+    metrics = compare_policies(
+        full_policy,
+        full_policy if set(retained) == set(original) else _context_free_policy(
+            expected_rewards, context_distribution
+        ),
+        expected_rewards,
+        context_distribution,
+    )
+    return {
+        "method": method_name,
+        "retained_variables": ",".join(retained),
+        "original_context_count": len(original),
+        "retained_context_count": len(retained),
+        "context_fraction_removed": context_reduction_fraction_removed(
+            len(original), len(retained)
+        ),
+        "context_fraction_retained": context_retention_fraction(
+            len(original), len(retained)
+        ),
+        "policy_agreement": metrics["policy_agreement"],
+        "expected_reward": metrics["reduced_context_reward"],
+        "full_context_reward": metrics["full_context_reward"],
+    }
+
+
+def _context_free_policy(
+    expected_rewards: np.ndarray, context_distribution: Sequence[float]
+) -> np.ndarray:
+    """Return the best single action repeated for every context."""
+    rewards = _validate_rewards(expected_rewards)
+    distribution = _validate_distribution(context_distribution, rewards.shape[0])
+    return np.repeat(np.argmax(np.dot(distribution, rewards)), rewards.shape[0])
 
 
 def policy_agreement(
