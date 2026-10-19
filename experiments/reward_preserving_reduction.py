@@ -27,7 +27,7 @@ from src.synthetic_data import compute_true_expected_rewards  # noqa: E402
 
 RESULTS_PATH = ROOT / "results" / "reward_preserving_reduction.csv"
 DEFAULT_SEED = 20261018
-DEFAULT_EPSILON = 0.0
+DEFAULT_EPSILON = 0.1
 
 
 def _case(
@@ -111,6 +111,8 @@ def _record(
     rewards: np.ndarray,
     distribution: list[float],
     runtime: float,
+    epsilon: float,
+    selection_feasible: bool | None = None,
 ) -> dict[str, object]:
     reference_reward = expected_policy_reward(rewards, reference_policy, distribution)
     achieved_reward = expected_policy_reward(rewards, policy, distribution)
@@ -128,6 +130,12 @@ def _record(
         "policy_agreement": policy_agreement(
             reference_policy, policy, distribution
         ),
+        "selection_feasible": (
+            achieved_reward >= reference_reward - epsilon
+            if selection_feasible is None
+            else selection_feasible
+        ),
+        "evaluation_within_epsilon": achieved_reward >= reference_reward - epsilon,
         "runtime": runtime,
     }
 
@@ -155,6 +163,7 @@ def run_experiment(
                 rewards,
                 distribution,
                 time.perf_counter() - started,
+                epsilon,
             )
         )
 
@@ -173,6 +182,7 @@ def run_experiment(
                 rewards,
                 distribution,
                 time.perf_counter() - started,
+                epsilon,
             )
         )
 
@@ -194,6 +204,8 @@ def run_experiment(
                 rewards,
                 distribution,
                 time.perf_counter() - started,
+                epsilon,
+                reduced["selection_feasible"],
             )
         )
     return rows
@@ -211,6 +223,8 @@ def write_results(rows: list[dict[str, object]], path: Path = RESULTS_PATH) -> N
         "achieved_reward",
         "reward_gap",
         "policy_agreement",
+        "selection_feasible",
+        "evaluation_within_epsilon",
         "runtime",
     ]
     with path.open("w", newline="", encoding="utf-8") as output:

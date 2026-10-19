@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from experiments.reward_preserving_reduction import run_experiment
 from src.context_reduction import reward_preserving_backward_elimination
 
 
@@ -32,6 +33,22 @@ def test_epsilon_allows_a_small_reward_loss():
     assert result["selected_context"] == []
     assert np.isclose(result["reward_gap"], 0.05)
     assert result["feasible"] is True
+    assert result["evaluation_reward_gap"] == result["reward_gap"]
+    assert result["evaluation_within_epsilon"] is True
+
+
+def test_experiment_epsilon_case_removes_context_with_nonzero_tolerated_gap():
+    rows = [
+        row
+        for row in run_experiment(seed=20261018, epsilon=0.1)
+        if row["case"] == "epsilon_tolerance"
+        and row["method"] == "reward_preserving_backward_elimination"
+    ]
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["selected_context"] == ""
+    assert 0 < row["reward_gap"] <= 0.1
+    assert row["selection_feasible"] is True
 
 
 def test_reward_gap_is_reference_minus_selected_reward():

@@ -1,0 +1,13 @@
+case,method,selected_context,context_size,reduction_ratio,reference_reward,achieved_reward,reward_gap,policy_agreement,selection_feasible,evaluation_within_epsilon,runtime
+irrelevant_context,full_context_reference,C,1,0.0,0.7,0.7,0.0,1.0,True,True,3.7500285543501377e-07
+irrelevant_context,prototype_context_reduction,,0,1.0,0.7,0.7,0.0,1.0,True,True,6.112499977461994e-05
+irrelevant_context,reward_preserving_backward_elimination,,0,1.0,0.7,0.7,0.0,1.0,True,True,8.833299943944439e-05
+policy_relevant_context,full_context_reference,C,1,0.0,0.8,0.8,0.0,1.0,True,True,2.9199873097240925e-07
+policy_relevant_context,prototype_context_reduction,,0,1.0,0.8,0.5,0.30000000000000004,0.5,False,False,1.7291997210122645e-05
+policy_relevant_context,reward_preserving_backward_elimination,C,1,0.0,0.8,0.8,0.0,1.0,True,True,6.599999323952943e-05
+interacting_context,full_context_reference,"A,B",2,0.0,0.8,0.8,0.0,1.0,True,True,1.6700505511835217e-07
+interacting_context,prototype_context_reduction,"A,B",2,0.0,0.8,0.8,0.0,1.0,True,True,3.9582999306730926e-05
+interacting_context,reward_preserving_backward_elimination,"A,B",2,0.0,0.8,0.8,0.0,1.0,True,True,0.00011491699842736125
+epsilon_tolerance,full_context_reference,C,1,0.0,1.0,1.0,0.0,1.0,True,True,1.2500095181167126e-07
+epsilon_tolerance,prototype_context_reduction,C,1,0.0,1.0,1.0,0.0,1.0,True,True,1.97910048882477e-05
+epsilon_tolerance,reward_preserving_backward_elimination,,0,1.0,1.0,0.95,0.050000000000000044,0.5,True,True,6.075000419514254e-05
