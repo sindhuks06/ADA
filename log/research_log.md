@@ -43,3 +43,40 @@ These observations suggest that the reduction in search-space size depends on gr
 1. Compare the experiment configuration and generated results with the original paper and repository outputs.
 2. Run `experiments/mgiss_for_real_world_graphs.py` to evaluate the reduction on real-world graphs.
 3. Record the baseline results before implementing or comparing context-selection methods such as mRMR and Model-X Knockoffs.
+
+## 19 October 2026 — Reward-Preserving Context Reduction
+
+**Objective:** Implement and evaluate a greedy context-reduction method that
+removes unnecessary conditioning variables while keeping expected reward
+within a configurable tolerance.
+
+### Work Completed
+
+- Implemented `reward_preserving_backward_elimination` with greedy
+  single-variable removal, epsilon-based feasibility, deterministic
+  tie-breaking, policy agreement, reward-gap, reduction-ratio, and runtime
+  reporting.
+- Added validation for zero-probability context groups and separate selection
+  and evaluation feasibility metrics.
+- Added tests covering irrelevant and policy-relevant context, epsilon
+  tolerance, reward gaps, deterministic ties, interactions, separate
+  evaluation tables, and invalid probability groups.
+- Added a reproducible comparison experiment for the full-context reference,
+  the existing prototype, and the new greedy method.
+- Evaluated irrelevant, policy-relevant, interacting, and epsilon-tolerant
+  synthetic cases using seed `20261018` and epsilon `0.1`.
+- Saved results to `results/reward_preserving_reduction.csv` and documented
+  the measured findings in `log/reward_preserving_reduction.md`.
+
+### Results
+
+- Irrelevant context was removed with no reward loss.
+- The policy-relevant variable was retained by the new method; the existing
+  prototype reduced reward from `0.8` to `0.5`.
+- Interacting variables were retained.
+- The epsilon case removed the variable with a measured reward gap of
+  approximately `0.05`, within epsilon `0.1`.
+- The complete test suite passed: `21 passed`.
+
+No exhaustive-search comparison was included because no existing exhaustive
+subset-search implementation was available.
