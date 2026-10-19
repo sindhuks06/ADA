@@ -124,6 +124,31 @@ The structure represents the intended organization of the project. Some files an
 
 The graph-based baseline experiments have been executed, while the conditional-intervention UCB evaluation is still being validated. The proposed context-reduction algorithm and comparative evaluation remain future work.
 
+### Greedy reward-preserving reduction
+
+`reward_preserving_backward_elimination` in `src/context_reduction.py` starts
+with the full conditioning context and greedily tests one-variable removals.
+Each candidate uses the best policy available after grouping rows by the
+remaining context values. A removal is accepted only when its selection reward
+is within `epsilon` of the full-context reference. Ties are deterministic.
+
+The function reports the selected context, reference and selected rewards,
+reward gap, weighted policy agreement, context reduction, runtime, and
+feasibility. For estimated rewards, pass a separate
+`evaluation_expected_rewards` table so policy selection and reported
+performance are not performed on the same held-out data. The
+`selection_feasible` result (and backward-compatible `feasible` alias) means
+only that the final policy meets epsilon relative to the full-context
+selection reward in `expected_rewards`. `evaluation_reward_gap` and
+`evaluation_within_epsilon` separately describe the evaluation table. With no
+separate evaluation table, the input is treated as an exact structural reward
+table, not as an unbiased held-out estimate. A context group with zero
+probability is rejected rather than assigned an arbitrary action.
+
+This is an empirical greedy procedure, not a causal-validity or global
+optimality guarantee: greedy elimination may miss the globally smallest
+feasible subset, especially when variables interact.
+
 The synthetic code is deliberately a controlled prototype: Test A and Test B
 illustrate policy behavior, while Test C illustrates confounding and adjustment.
 These experiments do not establish a causal-selection algorithm, novelty, or a
